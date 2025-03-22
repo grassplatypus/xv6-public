@@ -12,7 +12,7 @@
 #include "proc.h"
 
 struct cpu cpus[NCPU];
-int ncpu;
+int ncpu; // Number of Processes
 uchar ioapicid;
 
 static uchar

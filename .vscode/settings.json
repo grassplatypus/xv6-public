@@ -3,6 +3,8 @@
         "syscall.h": "c",
         "proc.h": "c",
         "*.tcc": "c",
-        "ostream": "c"
+        "ostream": "c",
+        "stat.h": "c",
+        "user.h": "c"
     }
 }
