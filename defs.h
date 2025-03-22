@@ -123,7 +123,7 @@ void            yield(void);
 // HOMEWORK
 int             getnice(int);     
 int             setnice(int, int);
-void            ps(void);
+void            ps(int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

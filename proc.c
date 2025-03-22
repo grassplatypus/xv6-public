@@ -550,21 +550,31 @@ int setnice(int pid, int value) {
   return 0;
 }
 
-void ps(void) {
+void ps(int pid) {
+  if (pid >= NPROC || pid < 0) return; // INVALID PID
+  //UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
   static char *states[] = {
-    [UNUSED]    "unused",
-    [EMBRYO]    "embryo",
-    [SLEEPING]  "sleep ",
-    [RUNNABLE]  "runble",
-    [RUNNING]   "run   ",
-    [ZOMBIE]    "zombie"
+    [UNUSED]    "UNUSED",
+    [EMBRYO]    "EMBRYO",
+    [SLEEPING]  "SLEEPING",
+    [RUNNABLE]  "RUNNABLE",
+    [RUNNING]   "RUNNING",
+    [ZOMBIE]    "ZOMBIE"
   };
   struct proc *p;
-  cprintf("name\tpid\tstate\tpriority\n");
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-    if(p->state == UNUSED) continue;
-    if(p->state >= 0 && p->state < NELEM(states) && states[p->state]) {
-      cprintf("%s\t%d\t%s\t%d\n", p->name, p->pid, states[p->state], p->nice);
+  if (pid == 0) {
+    cprintf("name\tpid\tstate\tpriority\n");
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      if(p->state == UNUSED) continue;
+      if(p->state >= 0 && p->state < NELEM(states) && states[p->state]) {
+        cprintf("%s\t%d\t%s\t%d\n", p->name, p->pid, states[p->state], p->nice);
+      }
     }
+  } else {
+    if (ptable.proc[pid].state == UNUSED) return;
+    p = &ptable.proc[pid];
+    cprintf("name\tpid\tstate\tpriority\n");
+    cprintf("%s\t%d\t%s\t%d\n", p->name, p->pid, states[p->state], p->nice);
   }
+  
 }

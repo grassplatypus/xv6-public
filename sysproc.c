@@ -113,5 +113,9 @@ int sys_setnice(void) {
 }
 
 void sys_ps(void) {
-  ps();
+  int pid;
+
+  if(argint(0, &pid) < 0)
+    return;
+  ps(pid);
 }
