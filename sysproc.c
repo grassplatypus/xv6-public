@@ -89,3 +89,29 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+
+// HOMEWORK (Project 1_25s)
+
+int sys_getnice(void) {
+  int pid;
+
+  if(argint(0, &pid) < 0)
+    return -1;
+  return getnice(pid);
+}
+
+int sys_setnice(void) {
+  int pid, n;
+
+  if(argint(0, &pid) < 0)
+    return -1;
+  if(argint(1, &n) < 0)
+    return -1;
+  return setnice(pid, n);
+}
+
+void sys_ps(void) {
+  ps();
+}

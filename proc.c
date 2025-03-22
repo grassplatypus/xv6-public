@@ -14,7 +14,7 @@ struct {
 
 static struct proc *initproc;
 
-int nextpid = 1;
+int nextpid = 1; // (HOMEOWRK) Next PID number to use (Global)
 extern void forkret(void);
 extern void trapret(void);
 
@@ -70,6 +70,8 @@ myproc(void) {
 // If found, change state to EMBRYO and initialize
 // state required to run in the kernel.
 // Otherwise return 0.
+// --- Look for Process Table to assign the available
+// slot for a new process ---
 static struct proc*
 allocproc(void)
 {
@@ -88,6 +90,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->nice = 20; // (HOMEWORK) default nice value
 
   release(&ptable.lock);
 
@@ -530,5 +533,38 @@ procdump(void)
         cprintf(" %p", pc[i]);
     }
     cprintf("\n");
+  }
+}
+
+int getnice(int pid) {
+  if (pid >= NPROC || pid < 0) return -1; // INVALID PID
+  if (ptable.proc[pid].state == UNUSED)  return -1; // NOT RUNNING
+  return ptable.proc[pid].nice;
+}
+
+int setnice(int pid, int value) {
+  if (pid >= NPROC || pid < 0) return -1; // INVALID PID
+  if (ptable.proc[pid].state == UNUSED) return -1; // NOT RUNNING
+  if (value < 0 || value > 39) return -1;
+  ptable.proc[pid].nice = value;
+  return 0;
+}
+
+void ps(void) {
+  static char *states[] = {
+    [UNUSED]    "unused",
+    [EMBRYO]    "embryo",
+    [SLEEPING]  "sleep ",
+    [RUNNABLE]  "runble",
+    [RUNNING]   "run   ",
+    [ZOMBIE]    "zombie"
+  };
+  struct proc *p;
+  cprintf("name\tpid\tstate\tpriority\n");
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(p->state == UNUSED) continue;
+    if(p->state >= 0 && p->state < NELEM(states) && states[p->state]) {
+      cprintf("%s\t%d\t%s\t%d\n", p->name, p->pid, states[p->state], p->nice);
+    }
   }
 }

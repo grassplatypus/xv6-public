@@ -154,7 +154,9 @@ main(void)
       break;
     }
   }
-
+  printf(1, "Student ID: 2021312673\n");
+  printf(1, "Name: Jaegyun Lee\n");
+  printf(1, "===MY MESSAGE: Let's Learn XV6!!===\n");
   // Read and run input commands.
   while(getcmd(buf, sizeof(buf)) >= 0){
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
